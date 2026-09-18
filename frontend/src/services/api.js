@@ -1,4 +1,4 @@
-﻿const API_BASE_URL = "https://meetmind-ai-b74u.onrender.com";
+﻿export const API_BASE_URL = "https://meetmind-ai-b74u.onrender.com";
 
 export async function askAI(question, sessionId = "frontend-demo") {
   const response = await fetch(`${API_BASE_URL}/api/ask`, {
