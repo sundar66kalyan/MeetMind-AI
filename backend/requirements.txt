@@ -8,3 +8,5 @@ pymupdf
 faster-whisper
 google-genai
 ddgs
+
+websockets
