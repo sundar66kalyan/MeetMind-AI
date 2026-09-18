@@ -1,4 +1,4 @@
-﻿from fastapi import APIRouter, HTTPException, UploadFile, File, Form
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse
 
 from backend.app.services.upload_service import process_uploaded_pdf
@@ -434,7 +434,7 @@ def ask_question(request: QuestionRequest):
             }
 
         # -----------------------------------------------------
-        # Step 3: PDF not relevant → Web search
+        # Step 3: PDF not relevant ? Web search
         # -----------------------------------------------------
 
         web_result = build_web_answer(
@@ -658,3 +658,33 @@ async def transcribe_audio(
 
         if file_path.exists():
             file_path.unlink()
+
+# =========================================================
+# LIVE SESSION WEBSOCKET
+# =========================================================
+
+@router.websocket("/ws/{session_id}")
+async def websocket_endpoint(websocket: WebSocket, session_id: str):
+    await connect(session_id, websocket)
+
+    try:
+        while True:
+            message = await websocket.receive_json()
+            await broadcast(session_id, message)
+
+    except WebSocketDisconnect:
+        disconnect(session_id, websocket)
+
+from backend.app.services.websocket_service import (
+    connect,
+    disconnect,
+    broadcast,
+)
+
+
+from backend.app.services.websocket_service import (
+    connect,
+    disconnect,
+    broadcast,
+)
+
