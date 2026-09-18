@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+python-multipart
+pydantic
+pydantic-settings
+chromadb
+pymupdf
+faster-whisper
+google-genai
+ddgs
