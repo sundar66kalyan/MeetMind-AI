@@ -1,4 +1,4 @@
-﻿const API_BASE_URL = "http://127.0.0.1:8000";
+﻿const API_BASE_URL = "https://meetmind-ai-b74u.onrender.com";
 
 export async function askAI(question, sessionId = "frontend-demo") {
   const response = await fetch(`${API_BASE_URL}/api/ask`, {
@@ -114,4 +114,10 @@ export async function transcribeAudio(audioBlob) {
   }
 
   return data;
+}
+export const WS_BASE_URL =
+  API_BASE_URL.replace("https://", "wss://").replace("http://", "ws://");
+
+export function createLiveSessionSocket(sessionId) {
+  return new WebSocket(`${WS_BASE_URL}/api/ws/${sessionId}`);
 }

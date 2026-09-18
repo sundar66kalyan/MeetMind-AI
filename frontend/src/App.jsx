@@ -7,6 +7,7 @@ import {
   getAPIStatus,
   uploadPDF,
   transcribeAudio,
+  createLiveSessionSocket,
 } from "./services/api";
 import { getSessionId } from "./utils/session";
 import "./App.css";
@@ -35,6 +36,8 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [backendOnline, setBackendOnline] = useState(false);
   const [sessionId] = useState(() => getSessionId());
+  const [liveSocket, setLiveSocket] = useState(null);
+  const [remoteTranscript, setRemoteTranscript] = useState("");
   const [pdfUrl, setPdfUrl] = useState("");
   const [highlights, setHighlights] = useState([]);
   const [relevantBlock, setRelevantBlock] = useState(null);
@@ -59,6 +62,40 @@ function App() {
 
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    const socket = createLiveSessionSocket(sessionId);
+
+    socket.onopen = () => {
+      console.log("MeetMind Live Session Connected");
+      setLiveSocket(socket);
+    };
+
+    socket.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+
+        if (message.type === "transcript") {
+          setRemoteTranscript(message.text || "");
+        }
+      } catch (error) {
+        console.error("Live session message error:", error);
+      }
+    };
+
+    socket.onerror = (error) => {
+      console.error("Live session WebSocket error:", error);
+    };
+
+    socket.onclose = () => {
+      setLiveSocket(null);
+      console.log("MeetMind Live Session Disconnected");
+    };
+
+    return () => {
+      socket.close();
+    };
+  }, [sessionId]);
 
   const handleAskAI = async () => {
     const trimmedQuestion = question.trim();
@@ -475,6 +512,15 @@ function App() {
       }
 
       setTranscript(combinedText.trim());
+
+      if (liveSocket && liveSocket.readyState === WebSocket.OPEN) {
+        liveSocket.send(
+          JSON.stringify({
+            type: "transcript",
+            text: combinedText.trim(),
+          })
+        );
+      }
 
       if (latestFinalText) {
         processDetectedQuestion(latestFinalText);
