@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Document, Page, pdfjs } from "react-pdf";
 import {
@@ -714,23 +714,23 @@ function App() {
               <div
                 style={{
                   position: "relative",
-                  width: "1000px",
+                  width: "900px",
                   maxWidth: "100%",
                 }}
               >
                 <Page
                   pageNumber={relevantBlock?.page || 1}
-                  width={1000}
+                  width={900}
                 />
 
                 {relevantLine && (
                   <div
                     style={{
                       position: "absolute",
-                      left: `${relevantLine.x0 * (1000 / 612)}px`,
-                      top: `${relevantLine.y0 * (1000 / 612)}px`,
-                      width: `${(relevantLine.x1 - relevantLine.x0) * (1000 / 612)}px`,
-                      height: `${(relevantLine.y1 - relevantLine.y0) * (1000 / 612)}px`,
+                      left: `${relevantLine.x0 * (900 / 612)}px`,
+                      top: `${relevantLine.y0 * (900 / 612)}px`,
+                      width: `${(relevantLine.x1 - relevantLine.x0) * (900 / 612)}px`,
+                      height: `${(relevantLine.y1 - relevantLine.y0) * (900 / 612)}px`,
                       backgroundColor: "rgba(255, 255, 0, 0.55)",
                       borderRadius: "3px",
                       pointerEvents: "none",

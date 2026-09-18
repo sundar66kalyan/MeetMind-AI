@@ -336,3 +336,25 @@ textarea:focus {
 .detected-question-card label {
   color: #c4b5fd;
 }
+
+.pdf-viewer {
+  width: 100%;
+  margin: 22px 0;
+  padding: 18px;
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
+  background: rgba(17, 20, 31, 0.82);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.pdf-viewer .react-pdf__Page {
+  display: flex;
+  justify-content: center;
+}
+
+.pdf-viewer canvas {
+  display: block;
+  max-width: none;
+  height: auto !important;
+}
